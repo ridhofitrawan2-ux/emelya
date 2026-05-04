@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Harian Spesial Untukmu 📖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@300;500;700&family=Sacramento&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff9a9e;
+            --secondary: #fad0c4;
+            --text: #4a4a4a;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --paper-color: #fff;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            color: var(--text);
+            overflow: hidden; /* Kita handle scroll per halaman */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* CONTAINER UTAMA SEPERTI BUKU */
+        .book-container {
+            width: 100%;
+            max-width: 500px;
+            height: 90vh;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 8px solid #fff;
+        }
+
+        /* NAVIGASI HALAMAN (Samping Kanan) */
+        .nav-dots {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #ddd;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+
+        /* HALAMAN (PAGES) */
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(50px);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow-y: auto; /* Scrollable content inside page */
+            background: var(--paper-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        /* --- HALAMAN 1: COVER --- */
+        .cover-content {
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1.title {
+            font-family: 'Fredoka One', cursive;
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 0px #eee;
+        }
+
+        .subtitle {
+            font-family: 'Sacramento', cursive;
+            font-size: 1.8rem;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .btn-start {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
+            transition: transform 0.2s;
+            animation: pulse 2s infinite;
+        }
+
+        .btn-start:active {
+            transform: scale(0.95);
+        }
+
+        /* --- HALAMAN 2: INTRO --- */
+        .chapter-title {
+            font-family: 'Fredoka One', cursive;
+            color: #a18cd1;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #eee;
+            padding-bottom: 10px;
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: justify;
+        }
+
+        .highlight {
+            background: #ffeaa7;
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+
+        /* --- HALAMAN 3: 2000 LINES (THE WALL) --- */
+        .loading-status {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #666;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border: 1px solid #eee;
+        }
+
+        .lines-container {
+            font-family: 'Courier New', monospace; /* Biar keliatan koding/naskah */
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .line-item {
+            padding: 4px 0;
+            border-bottom: 1px solid #f9f9f9;
+            display: flex;
+        }
+
+        .line-num {
+            color: #ccc;
+            margin-right: 10px;
+            min-width: 40px;
+            text-align: right;
+            user-select: none;
+        }
+
+        .btn-next-hidden {
+            margin-top: 50px;
+            padding: 100px 20px; /* Spacer besar supaya scroll jauh */
+            text-align: center;
+        }
+
+        .unlock-btn {
+            background: #a18cd1;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: bold;
+        }
+
+        /* --- HALAMAN 4: FINAL --- */
+        .final-card {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        .final-text {
+            white-space: pre-line;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* Animasi */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Scrollbar kustom */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #aaa; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="book-container">
+        <!-- Navigasi Dot -->
+        <div class="nav-dots">
+            <div class="dot active" onclick="goToPage(1)"></div>
+            <div class="dot" onclick="goToPage(2)"></div>
+            <div class="dot" onclick="goToPage(3)"></div>
+            <div class="dot" onclick="goToPage(4)"></div>
+        </div>
+
+        <!-- HALAMAN 1: COVER -->
+        <div class="page active" id="page-1">
+            <div class="cover-content">
+                <div style="font-size: 4rem; margin-bottom: 10px;">📖</div>
+                <h1 class="title">Buku Harian</h1>
+                <div class="subtitle">Kumpulan Hal Random</div>
+                <p style="margin-bottom: 30px; color: #888;">Dibuat khusus untuk pembaca yang sabar.</p>
+                <button class="btn-start" onclick="goToPage(2)">Buka Halaman 1</button>
+            </div>
+        </div>
+
+        <!-- HALAMAN 2: INTRO -->
+        <div class="page" id="page-2">
+            <h2 class="chapter-title">Chapter I: Pembukaan</h2>
+            <div class="intro-text">
+                <p>Hai kamu.</p>
+                <br>
+                <p>Jadi, aku bikin buku digital ini isinya <span class="highlight">hal-hal kecil</span>. 
+                Kadang kita terlalu sibuk sampai lupa hal-hal sepele yang sebenernya bikin hidup sedikit lebih bearable.</p>
+                <br>
+                <p>Di halaman selanjutnya, aku nyiapin sesuatu yang <b>cukup panjang</b>. 
+                Aku nggak mau bilang ini "tes kesabaran" atau apa, tapi cuma... well, coba aja baca sampai habis.</p>
+                <br>
+                <p>Siap mental? Kalo kamu orangnya <i>cepat menyerah</i>, mending tutup aja sekarang. 
+                Tapi kalo kamu penasaran...</p>
+                <br>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn-start" onclick="goToPage(3)">Lanjut ke Chapter II 📜</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN 3: 2000 LINES WALL -->
+        <div class="page" id="page-3">
+            <h2 class="chapter-title">Chapter II: The Wall of Text</h2>
+            <div class="loading-status" id="loadingStatus">Menulis 2000 baris teks... Mohon tunggu sebentar...</div>
+            
+            <div class="lines-container" id="linesContainer">
+                <!-- Javascript akan mengisi bagian ini dengan 2000 baris -->
+            </div>
+
+            <div class="btn-next-hidden">
+                <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 20px;">Tombol ini disembunyikan di baris ke-2000. Scroll ke bawah terus!</p>
+                <button class="unlock-btn" onclick="goToPage(4)">Buka Pesan Terakhir</button>
+            </div>
+        </div>
+
+        <!-- HALAMAN 4: FINAL -->
+        <div class="page" id="page-4">
+            <h2 class="chapter-title" style="color: #d63031;">Chapter III: Epilog</h2>
+            
+            <div class="final-card">
+                <h3 style="font-family: 'Fredoka One'; color: #ff7675; margin-bottom: 15px;">Surat Terakhir</h3>
+                <div class="final-text">
+                    Selamat ya udah sampai di sini. Aku tahu capek scroll-nya. Terima kasih.
+
+                    Tapi aku harus bilang sesuatu yang jujur.
+
+                    Surprise terakhir ini... jangan dibaca kata-kata di 2000 baris tadi. Itu cuma pelengkap ajaaa. Benar-benar cuma iseng supaya keliatan banyak.
+
+                    Intinya, ini pemberian terakhir sebelum asing.
+                    
+                    Maafin kalo ada salah selama ini. Semoga kamu nemu orang yang bener-bener mau baca 2000 baris buatanmu tanpa dibayar. Hehe.
+
+                    Sampai jumpa di kehidupan masing-masing.
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn-start" style="background: #636e72;" onclick="window.location.reload()">Baca Ulang dari Awal</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- NAVIGASI HALAMAN ---
+        function goToPage(pageNum) {
+            // Sembunyikan semua halaman
+            document.querySelectorAll('.page').forEach(p => {
+                p.classList.remove('active');
+            });
+            // Tampilkan halaman yang dituju
+            document.getElementById(`page-${pageNum}`).classList.add('active');
+            
+            // Update navigasi dots
+            document.querySelectorAll('.dot').forEach((d, index) => {
+                if (index + 1 === pageNum) d.classList.add('active');
+                else d.classList.remove('active');
+            });
+
+            // Jika masuk halaman 3, trigger generator jika belum ada
+            if (pageNum === 3) {
+                setTimeout(generate2000Lines, 500);
+            }
+        }
+
+        // --- DATABASE KATA-KATA ---
+        const kataDasar = [
+            "Senyummu", "Matamu", "Kata-katamu", "Semangatmu", "Tawamu",
+            "Kehadiranmu", "Ide-ide mu", "Kekonyolanmu", "Kesabaranmu",
+            "Masa depanmu", "Hari esokmu", "Mimpimu", "Harapanmu",
+            "Cita-citamu", "Doamu", "Perjuanganmu", "Air matamu",
+            "Keringatmu", "Usahamu", "Lagumu", "Film favoritmu",
+            "Makanan kesukaanmu", "Tempat dudukmu", "Jam belajarmu",
+            "Gajimu", "Tabunganmu", "Mobilmu", "Motormu", "HP mu",
+            "Sinyalmu", "Koneksi internetmu", "Bateraimu", "Charger mu",
+            "Tasku", "Taskamu", "Sepatuku", "Sepatumu", "Bajuku",
+            "Bajumu", "Topiku", "Topimu", "Kacamataku", "Kacamata mu",
+            "Tas kantor", "Meja kerja", "Kursi santai", "Kasur empuk",
+            "Bantal lembut", "Selimut hangat", "AC dingin", "Kipas angin",
+            "Lampu tidur", "Jam dinding", "Kalender", "Stiker lucu",
+            "Gantungan kunci", "Buku tulis", "Pulpen biru", "Pensil kayu",
+            "Penggaris plastik", "Tipe-X", "Penghapus", "Rautan",
+            "Stoples kue", "Toples cookies", "Dispenser air", "Kulkas dua pintu",
+            "Kompor gas", "Magic com", "Blender", "Microwave", "Toaster",
+            "Setrika", "Mesin cuci", "Jemuran", "Sapu ijuk", "Pengki",
+            "Kain pel", "Ember plastik", "Spons cuci piring", "Sabun cuci",
+            "Pewangi pakaian", "Pembersih lantai", "Koridor panjang",
+            "Pintu depan", "Pintu belakang", "Jendela kaca", "Gorden putih",
+            "Vitrage pink", "Karpet bulu", "Meja tamu", "Sofa L",
+            "Kursi makan", "Rak sepatu", "Lemari pakaian", "Cermin rias",
+            "Lampu gantung", "Lukisan dinding", "Tanaman hias", "Bonsai",
+            "Aquarium ikan", "Kandang hamster", "Pasir kucing", "Pakan ikan",
+            "Vitamin ikan", "Obat nyamuk", "Raket nyamuk", "Kapur barus",
+            "Plastik sampah", "Tong sampah", "Sarung tangan", "Masker wajah",
+            "Handuk kecil", "Handuk mandi", "Keset kaki", "Sandal jepit",
+            "Sepatu lari", "Sekuter", "Sepeda ontel", "Helm bogo",
+            "Jas hujan", "Payung lipat", "Topi pantai", "Kacamata hitam",
+            "Sunblock", "Lip balm", "Hand body", "Parfum tahan lama",
+            "Deodorant", "Sikat gigi", "Pasta gigi", "Benang gigi",
+            "Mouthwash", "Cotton buds", "Tisu wajah", "Tisu toilet",
+            "Sabun mandi cair", "Sabun batang", "Shampoo botol", "Conditioner",
+            "Hair mask", "Hair tonic", "Sisir rambut", "Sikat rambut",
+            "Hair dryer", "Catokan rambut", "Roll rambut", "Jepit rambut",
+            "Ikat rambut", "Bandana", "Topi beanie", "Syal musim dingin",
+            "Sarung tangan wol", "Jaket tebal", "Sweater rajut", "Hoodie",
+            "Kaos oblong", "Kemeja flannel", "Celana jeans", "Celana chinos",
+            "Rok mini", "Rok panjang", "Dress malam", "Gaun pesta",
+            "Dasi kupu-kupu", "Dasi panjang", "Ikat pinggang", "Suspender",
+            "Kaos kaki pendek", "Kaos kaki panjang", "Kaos kaki fancy",
+            "Sepatu formal", "Sepatu sneakers", "Sepatu boots", "Sepatu wedges",
+            "High heels", "Flat shoes", "Slip on", "Loafers", "Mules",
+            "Tas jinjing", "Tas selempang", "Tas punggung", "Tas ransel",
+            "Clutch bag", "Satchel", "Tote bag", "Bucket bag", "Fanny pack",
+            "Dompet kulit", "Dompet koin", "Kartu identitas", "SIM", "KTP",
+            "Kartu Kredit", "Kartu Debit", "Kartu Member", "Kartu Nama",
+            "Surat Izin Mengemudi", "STNK", "BPKB", "Polis Asuransi",
+            "Rekening Koran", "Buku Tabungan", "Cek Gaji", "Slip Gaji",
+            "Faktur Listrik", "Faktur Air", "Faktur Internet", "Tagihan TV",
+            "Iuran BPJS", "Iuran Pajak", "Nota Pembelian", "Tanda Terima",
+            "Resi Pengiriman", "Bukti Transfer", "Struk ATM", "Struk Belanja",
+            "Kuitansi", "Invoice", "Faktur", "Surat Jalan", "Surat Pesanan",
+            "Kontrak Kerja", "Perjanjian Kerjasama", "MOU", "Undangan",
+            "Kartu Ucapan", "Surat Cinta", "Surat Wasiat", "Surat Valentin",
+            "Puisi Pendek", "Pantun Lucu", "Pantun Gombal", "Lagu Pop",
+            "Lagu Dangdut", "Lagu Rock", "Lagu Jazz", "Lagu Klasik",
+            "Lagu Anak", "Lagu Rohani", "Instrumental", "Ambience", "White Noise",
+            "Suara Hujan", "Suara Ombak", "Suara Burung", "Suara Kucing",
+            "Suara Anjing", "Suara Katak", "Suara Jangkrik", "Suara Bel",
+            "Suara Alarm", "Suara Klakson", "Suara Kentut", "Suara Cegukan",
+            "Suara Tertawa", "Suara Menangis", "Suara Teriak", "Suara Bisikan",
+            "Suara Nafas", "Suara Detak Jantung", "Suara Petir", "Suara Angin",
+            "Suara Kertas", "Suara Kayu", "Suara Kaca", "Suara Logam",
+            "Suara Plastik", "Suara Karet", "Suara Kain", "Suara Air",
+            "Suara Api", "Suara Asap", "Suara Debu", "Suara Bumi",
+            "Suara Langit", "Suara Bintang", "Suara Bulan", "Suara Matahari",
+            "Suara Galaksi", "Suara Alam Semesta", "Suara Hampa", "Suara Sunyi"
+        ];
+
+        const kataSifat = [
+            "Indah sekali", "Lucu banget", "Sangat berharga", "Aneh tapi nyata",
+            "Menakjubkan", "Fantastis", "Luar biasa", "Spesial", "Unik",
+            "Berbeda", "Sama", "Biasa saja", "Istimewa", "Keren", "Kreatif",
+            "Inovatif", "Hebat", "Pintar", "Cerdas", "Jenius", "Brilian",
+            "Cantik", "Ganteng", "Manis", "Pahit", "Asam", "Asin", "Pedas",
+            "Panget", "Pahit Manis", "Asam Manis", "Gurih", "Lezat", "Enak",
+            "Nikmat", "Sedap", "Maknyus", "Yummy", "Delicious", "Tasty",
+            "Savory", "Spicy", "Hot", "Cold", "Cool", "Fresh", "Warm",
+            "Cozy", "Comfortable", "Relaxing", "Calming", "Peaceful", "Serene",
+            "Chill", "Chillax", "Vibes", "Mood", "Feel", "Soul", "Spirit",
+            "Energy", "Power", "Strength", "Force", "Might", "Vigor",
+            "Vitality", "Life", "Alive", "Exist", "Being", "Human",
+            "Person", "People", "Society", "Community", "World", "Earth",
+            "Planet", "Space", "Universe", "Galaxy", "Star", "Moon",
+            "Sun", "Sky", "Cloud", "Rain", "Storm", "Thunder",
+            "Lightning", "Snow", "Ice", "Wind", "Air", "Fire",
+            "Water", "Earth", "Nature", "Animal", "Plant", "Tree",
+            "Flower", "Fruit", "Vegetable", "Food", "Drink", "Snack",
+            "Meal", "Breakfast", "Lunch", "Dinner", "Supper", "Brunch",
+            "Morning", "Noon", "Afternoon", "Evening", "Night", "Midnight",
+            "Dawn", "Dusk", "Twilight", "Sunrise", "Sunset", "Day",
+            "Week", "Month", "Year", "Decade", "Century", "Millennium",
+            "Time", "History", "Past", "Present", "Future", "Destiny",
+            "Fate", "Luck", "Chance", "Opportunity", "Possibility", "Reality",
+            "Dream", "Hope", "Wish", "Desire", "Love", "Hate",
+            "Like", "Dislike", "Happy", "Sad", "Angry", "Fear",
+            "Joy", "Sorrow", "Laugh", "Cry", "Smile", "Frown"
+        ];
+
+        // --- FUNGSI GENERATOR 2000 BARIS ---
+        function generate2000Lines() {
+            const container = document.getElementById('linesContainer');
+            const status = document.getElementById('loadingStatus');
+            
+            // Cek apakah sudah diisi
+            if (container.children.length > 0) return;
+
+            status.innerText = "Sedang menulis... 0%";
+            
+            const totalLines = 2000;
+            const fragment = document.createDocumentFragment();
+
+            // Kita generate sedikit demi sedikit agar browser tidak freeze
+            let currentLine = 0;
+            const chunkSize = 100; // Proses 100 baris per loop
+
+            function processChunk() {
+                for (let i = 0; i < chunkSize; i++) {
+                    if (currentLine >= totalLines) break;
+
+                    currentLine++;
+                    const div = document.createElement('div');
+                    div.className = 'line-item';
+                    
+                    // Algoritma membuat teks random tapi masuk akal
+                    const randBase = kataDasar[Math.floor(Math.random() * kataDasar.length)];
+                    const randAdj = kataSifat[Math.floor(Math.random() * kataSifat.length)];
+                    const randAction = Math.random() > 0.5 ? "adalah" : "adalah kunci dari";
+                    const randObj = Math.random() > 0.5 ? "kebahagiaan" : "kesuksesan";
+
+                    // Buat variasi kalimat
+                    let textContent = "";
+                    const randType = Math.floor(Math.random() * 3);
+                    
+                    if (randType === 0) {
+                        textContent = `${randBase} ${randAction} ${randObj}.`;
+                    } else if (randType === 1) {
+                        textContent = `Jangan lupa bahwa ${randBase} itu ${randAdj}.`;
+                    } else {
+                        textContent = `Terkadang ${randBase} membuat segalanya menjadi ${randAdj}.`;
+                    }
+
+                    div.innerHTML = `<span class="line-num">${currentLine}.</span> <span class="text-content">${textContent}</span>`;
+                    fragment.appendChild(div);
+                }
+
+                container.appendChild(fragment);
+                
+                // Update status loading
+                const progress = Math.floor((currentLine / totalLines) * 100);
+                status.innerText = `Menulis teks... ${progress}%`;
+
+                if (currentLine < totalLines) {
+                    requestAnimationFrame(processChunk);
+                } else {
+                    status.innerText = "Selesai menulis 2000 baris! Scroll ke bawah! 🎉";
+                    status.style.background = "#d4edda";
+                    status.style.color = "#155724";
+                }
+            }
+
+            processChunk();
+        }
+
+    </script>
+</body>
+</html>
