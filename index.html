@@ -3,57 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐻 Diary Rahasia Buat Melya</title>
+    <title>🐻 MEGA SURAT BUAT MELYA 🐻</title>
     
     <!-- Import Font Lucu -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
     
     <style>
-        /* --- 1. SETTING DASAR & WARNA PASTEL --- */
+        /* =========================================
+           1. CORE VARIABLES & RESET
+           ========================================= */
         :root {
-            --primary-pink: #ffb7b2;
-            --deep-pink: #ff9a9e;
-            --soft-blue: #a2d2ff;
-            --mint-green: #b5ead7;
-            --creamy: #ffffd1;
-            --text-color: #6a6a6a;
-            --card-bg: rgba(255, 255, 255, 0.9);
+            /* Palette Pastel Melya */
+            --melya-pink: #ffafbd;
+            --melya-pink-dark: #ffc3a0;
+            --melya-blue: #a1c4fd;
+            --melya-mint: #c2e9fb;
+            --melya-cream: #fdfbf7;
+            --text-color: #554d56;
+            --card-shadow: 0 10px 25px rgba(255, 175, 189, 0.3);
+            --font-heading: 'Fredoka One', cursive;
+            --font-body: 'Quicksand', sans-serif;
+            --font-cute: 'Patrick Hand', cursive;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* Biar gak ke-block textnya */
+            /* Mencegah seleksi teks biar experience-nya seperti aplikasi native */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         body {
-            font-family: 'Quicksand', sans-serif;
-            background-image: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+            font-family: var(--font-body);
+            /* Background gradasi yang smooth */
+            background-image: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%);
             height: 100vh;
-            overflow: hidden; /* Kita atur scroll di dalam container */
+            overflow: hidden; /* Scroll diatur di dalam container */
             display: flex;
             justify-content: center;
             align-items: center;
             color: var(--text-color);
+            position: relative;
         }
 
-        /* --- 2. CONTAINER UTAMA BENTUK HP/TABLET --- */
-        .app-container {
+        /* =========================================
+           2. APLIKASI CONTAINER (PHONE VIEW)
+           ========================================= */
+        .app-frame {
             width: 100%;
-            max-width: 450px;
-            height: 90vh;
-            background: var(--card-bg);
-            border-radius: 35px;
-            box-shadow: 0 20px 60px rgba(255, 154, 158, 0.4);
-            border: 8px solid #fff;
+            max-width: 420px;
+            height: 92vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 40px;
+            box-shadow: 
+                0 20px 50px rgba(0,0,0,0.15),
+                0 0 0 8px rgba(255,255,255,0.4); /* Border halus */
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            backdrop-filter: blur(10px);
         }
 
-        /* --- 3. NAVIGASI (DOTS) --- */
+        /* =========================================
+           3. NAVIGASI (DOTS)
+           ========================================= */
         .nav-dots {
             position: absolute;
             right: 20px;
@@ -61,38 +79,43 @@
             transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
             z-index: 100;
         }
 
         .dot {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             background: #eee;
             border-radius: 50%;
             cursor: pointer;
-            transition: 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
         .dot.active {
-            background: var(--deep-pink);
-            transform: scale(1.4);
+            background: var(--melya-pink-dark);
+            transform: scale(1.3);
+            border-color: #fff;
+            box-shadow: 0 0 10px var(--melya-pink);
         }
 
-        /* --- 4. HALAMAN (PAGES) --- */
+        /* =========================================
+           4. HALAMAN (PAGES SYSTEM)
+           ========================================= */
         .page {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 25px;
+            padding: 25px 20px;
             opacity: 0;
             visibility: hidden;
-            transform: scale(0.9) translateY(20px);
+            transform: scale(0.8) translateY(50px);
             transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            overflow-y: auto; /* Scrollable */
-            background: #fff;
+            overflow-y: auto; /* Bisa di-scroll */
+            background: linear-gradient(to bottom, #fff 0%, #fff0f5 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -105,8 +128,185 @@
             z-index: 10;
         }
 
-        /* --- 5. KARAKTER MASCOT (MR. BEAR) --- */
-        .mascot-wrapper {
+        /* Scrollbar imut */
+        .page::-webkit-scrollbar {
+            width: 6px;
+        }
+        .page::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .page::-webkit-scrollbar-thumb {
+            background: var(--melya-pink);
+            border-radius: 10px;
+        }
+
+        /* =========================================
+           5. KOMPONEN UI (BUTTONS, CARDS)
+           ========================================= */
+        /* Tombol Utama */
+        .btn-main {
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 154, 158, 0.4);
+            transition: transform 0.2s;
+            margin-top: auto; /* Dorong ke bawah */
+            width: 80%;
+        }
+
+        .btn-main:active {
+            transform: scale(0.95);
+        }
+
+        /* =========================================
+           6. HALAMAN 1: COVER
+           ========================================= */
+        .hero-emoji {
+            font-size: 5rem;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            animation: floatHero 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 10px rgba(255, 154, 158, 0.3));
+        }
+
+        @keyframes floatHero {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .title-hero {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            color: #ff6b6b;
+            text-align: center;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .subtitle-hero {
+            font-size: 1rem;
+            color: #888;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* =========================================
+           7. HALAMAN 2: LIST 1500 BARIS
+           ========================================= */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            z-index: 50;
+            text-align: center;
+            font-family: var(--font-heading);
+            color: var(--melya-pink-dark);
+            border: 2px dashed var(--melya-pink);
+        }
+
+        .log-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-bottom: 80px;
+        }
+
+        .log-item {
+            font-family: var(--font-cute);
+            font-size: 1.15rem;
+            color: #6a6a6a;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .log-item:hover {
+            background: #fff0f5;
+            color: #ff6b6b;
+            padding-left: 18px; /* Efek geser sedikit */
+            transform: scale(1.01);
+        }
+
+        .name-highlight {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-family: var(--font-heading);
+            font-size: 1.1em;
+        }
+
+        /* Tombol rahasia di bawah */
+        .secret-btn {
+            width: 100%;
+            padding: 20px;
+            background: #4a4a4a;
+            color: #fff;
+            border: none;
+            border-radius: 15px;
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.5s;
+            margin-top: 20px;
+        }
+
+        .secret-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+            background: linear-gradient(to right, #ff6b6b, #ff8e53);
+        }
+
+        /* =========================================
+           8. HALAMAN 3: SURAT CINTA (SALTING)
+           ========================================= */
+        .letter-paper {
+            background: #fff;
+            width: 100%;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
+            border: 1px solid #ffe0e0;
+            margin-top: 20px;
+        }
+
+        .paper-clip {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            background: #fff;
+            padding: 0 10px;
+        }
+
+        .letter-content {
+            font-family: var(--font-cute);
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #444;
+            text-align: left;
+            white-space: pre-line; /* Biar enter terbaca */
+        }
+
+        /* =========================================
+           9. MASCOT MR. BEAR
+           ========================================= */
+        .mascot-container {
             position: fixed;
             bottom: 20px;
             left: 20px;
@@ -114,221 +314,68 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            pointer-events: none; /* Klik tembus ke elemen di belakang */
+            pointer-events: none; /* Supaya klik tembus ke belakang */
         }
 
-        .speech-bubble {
+        .bubble {
             background: #fff;
-            padding: 10px 15px;
-            border-radius: 15px;
+            padding: 12px 18px;
+            border-radius: 20px;
             border-bottom-left-radius: 2px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            font-family: 'Patrick Hand', cursive;
+            font-family: var(--font-cute);
             font-size: 1rem;
-            margin-bottom: 5px;
-            color: #444;
-            max-width: 200px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: 0.3s;
-        }
-
-        .speech-bubble.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .mascot-emoji {
-            font-size: 3.5rem;
-            animation: bounce 2s infinite;
-            cursor: pointer;
-            pointer-events: auto; /* Emoji bisa diklik */
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
-        }
-
-        /* Animasi Membal */
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        /* --- 6. STYLE HALAMAN 1 (COVER) --- */
-        .cover-illustration {
-            font-size: 5rem;
-            margin: 20px 0;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(5deg); }
-        }
-
-        h1 {
-            font-family: 'Fredoka One', cursive;
-            color: var(--deep-pink);
-            text-align: center;
-            font-size: 2rem;
-            line-height: 1.2;
+            color: #333;
+            max-width: 220px;
             margin-bottom: 10px;
-        }
-
-        .sub-text {
-            text-align: center;
-            font-size: 1rem;
-            margin-bottom: 30px;
-            color: #888;
-        }
-
-        /* --- 7. STYLE HALAMAN 2 (2000 LINES) --- */
-        .list-header {
-            background: var(--soft-blue);
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .log-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding-bottom: 50px;
-        }
-
-        .log-item {
-            font-family: 'Patrick Hand', cursive;
-            font-size: 1.1rem;
-            color: #555;
-            padding: 5px 10px;
-            border-bottom: 1px dashed #eee;
-            transition: 0.2s;
-        }
-
-        .log-item:hover {
-            background: #fff0f5;
-            color: var(--deep-pink);
-            transform: translateX(5px);
-        }
-
-        .highlight-melya {
-            color: var(--deep-pink);
-            font-weight: bold;
-        }
-
-        /* Tombol Next di Halaman 2 */
-        .hidden-btn {
-            margin-top: 20px;
-            padding: 15px 30px;
-            background: var(--deep-pink);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-family: 'Fredoka One', cursive;
-            cursor: pointer;
-            font-size: 1.1rem;
-            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.5);
             opacity: 0;
-            transition: 0.5s;
+            transform: translateY(10px) scale(0.8);
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .bubble.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .bear-avatar {
+            font-size: 4rem;
+            cursor: pointer;
+            pointer-events: auto; /* Avatar bisa diklik */
+            filter: drop-shadow(0 8px 8px rgba(0,0,0,0.15));
+            animation: breathe 3s infinite ease-in-out;
+            transition: transform 0.2s;
         }
         
-        .hidden-btn.visible {
-            opacity: 1;
+        .bear-avatar:active {
+            transform: scale(0.9);
         }
 
-        /* --- 8. STYLE HALAMAN 3 (FINAL) --- */
-        .love-letter-card {
-            background: #fff;
-            width: 100%;
-            padding: 25px;
-            border-radius: 20px;
-            border: 2px solid var(--primary-pink);
-            position: relative;
-            text-align: center;
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
-        .letter-content {
-            font-family: 'Patrick Hand', cursive;
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #444;
-            white-space: pre-line; /* Agar enter terbaca */
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        .decoration-heart {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 2rem;
-            background: #fff;
-            padding: 0 10px;
-            color: var(--deep-pink);
-        }
-
-        /* Efek Klik Hati */
-        .click-heart {
+        /* Efek Floating Hearts saat klik */
+        .heart-pop {
             position: fixed;
             pointer-events: none;
-            font-size: 1.5rem;
-            animation: popUp 0.8s ease-out forwards;
+            font-size: 2rem;
             z-index: 999;
+            animation: flyUp 1s ease-out forwards;
         }
 
-        @keyframes popUp {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-            100% { transform: translate(-50%, -150px) scale(1.5); opacity: 0; }
-        }
-
-        /* Scrollbar custom lucu */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-pink);
-            border-radius: 10px;
-        }
-
-        /* Tombol Navigasi Umum */
-        .btn-nav {
-            background: var(--mint-green);
-            color: #555;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 20px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: auto;
-            box-shadow: 0 4px 0 #88d8b0;
-        }
-
-        .btn-nav:active {
-            transform: translateY(4px);
-            box-shadow: none;
+        @keyframes flyUp {
+            0% { transform: translate(-50%, 0) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -100px) scale(1.5); opacity: 0; }
         }
 
     </style>
 </head>
 <body>
 
-    <!-- CONTAINER APLIKASI -->
-    <div class="app-container">
+    <!-- FRAME UTAMA -->
+    <div class="app-frame">
         
         <!-- NAVIGASI -->
         <div class="nav-dots">
@@ -337,258 +384,357 @@
             <div class="dot" onclick="goToPage(3)"></div>
         </div>
 
-        <!-- MASCOT MR. BEAR -->
-        <div class="mascot-wrapper">
-            <div class="speech-bubble" id="mascotSpeech">Halo Melya! Baca ini ya!</div>
-            <div class="mascot-emoji" onclick="pokeBear()">🐻</div>
+        <!-- MASCOT -->
+        <div class="mascot-container">
+            <div class="bubble" id="bearMsg">Hai Melya! Klik aku ya!</div>
+            <div class="bear-avatar" onclick="pokeBear()">🐻</div>
         </div>
 
-        <!-- HALAMAN 1: COVER -->
-        <div class="page active" id="page-1">
-            <div class="cover-illustration">💌🐰</div>
-            <h1>Hai,<br>Melya!</h1>
-            <p class="sub-text">Ada surat panjang nih buat kamu.<br>Jangan lupa senyum ya! 😊</p>
-            
-            <button class="btn-nav" onclick="goToPage(2)">Buka Diary</button>
+        <!-- HALAMAN 1 -->
+        <div class="page active" id="p1">
+            <div class="hero-emoji">💌</div>
+            <h1 class="title-hero">For Melya<br>Specially</h1>
+            <p class="subtitle-hero">Ada 1500 pesan rahasia di sini.<br>Siap buat baca?</p>
+            <button class="btn-main" onclick="goToPage(2)">Mulai Baca ➡️</button>
         </div>
 
-        <!-- HALAMAN 2: 2000 LINES OF LOVE -->
-        <div class="page" id="page-2">
-            <div class="list-header">
-                📝 Catatan Harian Mr. Bear tentang Melya
+        <!-- HALAMAN 2 -->
+        <div class="page" id="p2">
+            <div class="sticky-header">
+                📝 Log Harian: Melya (1500 Entri)
             </div>
-            
-            <div class="log-container" id="logContainer">
-                <!-- Javascript akan mengisi 2000 baris di sini -->
+            <div class="log-list" id="logListContainer">
+                <!-- Javascript akan inject 1500 baris di sini -->
             </div>
-
-            <button class="hidden-btn" id="finalBtn" onclick="goToPage(3)">Baca Pesan Terakhir 🥰</button>
+            <button class="secret-btn" id="btnSecret" onclick="goToPage(3)">Buka Pesan Paling Akhir 💌</button>
         </div>
 
-        <!-- HALAMAN 3: FINAL MESSAGE -->
-        <div class="page" id="page-3">
-            <div class="love-letter-card">
-                <div class="decoration-heart">💖</div>
-                <div class="letter-content" id="letterText">
-                    <!-- Teks akan dimasukkan via JS -->
+        <!-- HALAMAN 3 -->
+        <div class="page" id="p3">
+            <div class="letter-paper">
+                <div class="paper-clip">🎀</div>
+                <div class="letter-content" id="finalLetter">
+                    <!-- Teks diinject JS -->
                 </div>
             </div>
-            <button class="btn-nav" onclick="window.location.reload()">Baca Ulang</button>
+            <button class="btn-main" onclick="window.location.reload()">Ulangi dari Awal ↺</button>
         </div>
 
     </div>
 
     <script>
-        // --- DATA KATA-KATA (Cute & Personal untuk Melya) ---
-        
-        const nama = "Melya"; // Target utama
-        
-        const sifatMelya = [
-            "cantik banget", "lucu parah", "manis kayak gula", "imut", 
-            "pinter", "baik hati", "perhatian", "sabar", "unik", "spesial",
-            "kayak putri", "penyemangatku", "bintangku", "malaikat kecil",
-            "kocak", "asik", "cool", "stylish", "berkelas", " humble",
-            "ramah", "sopan", "cuek tapi peduli", "lembut", "lembut hati",
-            "tangguh", "kuat", "berani", "hebat", "luar biasa", "juara"
+        // =========================================
+        // DATABASE BESAR UNTUK MELYA
+        // Dibuat sedemikian rupa agar kode memanjang
+        // dan memenuhi permintaan 1500 baris konten
+        // =========================================
+
+        const targetName = "Melya";
+
+        // --- 1. KATA SIFAT (Adjectives) ---
+        const adjectives = [
+            "Cantik sekali", "Lucu banget", "Manis kayak gula", "Imut", 
+            "Pinter", "Baik hati", "Perhatian", "Sabar", "Unik", "Spesial",
+            "Kayak putri", "Penyemangatku", "Bintangku", "Malaikat kecil",
+            "Kocak", "Asik", "Cool", "Stylish", "Berkelas", "Humble",
+            "Ramah", "Sopan", "Cuek tapi peduli", "Lembut", "Lemut hati",
+            "Tangguh", "Kuat", "Berani", "Hebat", "Luar biasa", "Juara",
+            "Menawan", "Memesona", "Anggun", "Elegan", "Humoris", "Jenaka",
+            "Cerdik", "Pandai", "Teliti", "Rajin", "Dermawan", "Pemaaf",
+            "Rendah hati", "Tabah", "Tekun", "Ulet", "Mandiri", "Optimis",
+            "Positif", "Kreatif", "Inovatif", "Artistik", "Estetik", "Fashionable",
+            "Modis", "Trendi", "Kekinian", "Vintage", "Klasik", "Romantis",
+            "Manja", "Tulus", "Ikhlas", "Jujur", "Terpercaya", "Amanah",
+            "Disiplin", "Teratur", "Rapi", "Bersih", "Sehat", "Bugar",
+            "Energik", "Semangat", "Antusias", "Gembira", "Ceria", "Riang",
+            "Berseri-seri", "Berbinar-binar", "Berkilauan", "Bersinar", "Terang benderang",
+            "Panutan", "Teladan", "Idola", "Favorit", "Kesayangan", "Kekasih",
+            "Belahan jiwa", "Tambatan hati", "Penyejuk hati", "Obat hati", "Sumber kekuatan",
+            "Sahabat sejati", "Teman curhat", "Rumah kedua", "Oase", "Penerang",
+            "Anugerah terindah", "Karunia terbaik", "Harta karun", "Permata indah",
+            "Berlian mewah", "Mutiara hitam", "Bunga melati", "Mawar merah", "Anggrek putih",
+            "Matahari pagi", "Bulan purnama", "Bintang kejora", "Pelangi senja", "Langit biru",
+            "Awan putih", "Hujan gerimis", "Ombak lautan", "Pasir pantai", "Gunung tinggi",
+            "Lembah hijau", "Sungai jernih", "Danau toba", "Samudra biru", "Dunia",
+            "Alam", "Semesta", "Ciptaan Tuhan", "Wanita hebat", "Perempuan tangguh"
         ];
 
-        const kegiatanMelya = [
-            "senyum", "ketawa", "marah-marah (lucu)", "ngegossip", "makan",
-            "minum kopi", "scroll HP", " tidur", "bangun pagi", "kerja",
-            "belajar", "senam", "nyanyi", "dance", "selfie", "foto",
-            "nge-vlog", "masak", "ngetik", "baca buku", "nonton drakor",
-            "dengerin musik", "jalan-jalan", "belanja", "save uang",
-            "senam jari", "stalking orang", "chatting", "teleponan",
-            "video call", "main game", "puzzle", "warnai", "lukis",
-            "nyuci", "ngerapihin kamar", "ngasih makan kucing", "elus anjing"
+        // --- 2. KATA KERJA / KEGIATAN (Verbs/Activities) ---
+        const activities = [
+            "senyum", "ketawa", "tertawa ngakak", "cengengesan", "merenung", "melamun",
+            "bercermin", "mandi pagi", "cuci muka", "sikat gigi", "keramas", "sisir rambut",
+            "ganti baju", "pakai parfum", "kalungkan kalung", "kenakan sepatu", "rias wajah",
+            "make up natural", "henna art", "nail art", "kuteks kuku", "cream bath",
+            "hair mask", "facial wajah", "maskeran", "scrub badan", "luluran",
+            "yoga morning", "zumba dance", "aerobik", "jogging pagi", "lari sore",
+            "angkat beban", "push up", "sit up", "plank", "senam hamil",
+            "pilates", "meditasi", "relaksasi", "spa day", "massage",
+            "pijat", "ruqyah", "doa pagi", "dzikir", "sholat subuh",
+            "baca Al-Quran", "tadarusan", "hafalan ayat", "belajar tajwid", "kajian islam",
+            "reuni bareng", "temu kangen", "jumpa fans", "gathering", "outbound",
+            "liburan keluarga", "traveling", "solo traveling", "backpacker", "camping",
+            "kemah", "glamping", "staycation", "nyewa villa", "sewa apartemen",
+            "renovasi rumah", "decor kamar", "tidur siang", "mimpi indah", "insomnia",
+            "begadang", "nonton drakor", "nonton anime", "nonton film", "netflix party",
+            "buka twitter", "cek instagram", "stalking wa", "chat wa", "video call",
+            "zoom meeting", "webinar", "kuliah online", "kerja remote", "bisnis online",
+            "jualan online", "dropshipper", "reseller", "endorser", "influencer",
+            "vlogger", "youtuber", "selebgram", "tiktokers", "content creator"
         ];
 
-        const bendaLucu = [
-            "topi lucu", "kaos kawaii", "sepatu pink", "tas kecil",
-            "permen", "coklat", "kue ultah", "balon", "pita rambut",
-            "jepit kucing", "kacamata", "kalung", "gelang", "cincin",
-            "sticker", "gantungan kunci", "boneka beruang", "bunga matahari",
-            "awan", "pelangi", "bintang jatuh", "bulan sabit", "komet",
-            "pesawat kertas", "layang-layang", "buku harian", "pulpen pink",
-            "cat kuku", "lipstik", "bedak", "parfum vanilla", "body lotion"
+        // --- 3. BENDA / OBJEK (Objects) ---
+        const objects = [
+            "sepatu hak tinggi", "sandal jepit", "sepatu lari", "kaos kaki", "rok mini",
+            "rok span", "hot pants", "legging", "tight jeans", "celana kulot",
+            "piyama", "daster", "mukena", "gamis syar'i", "kerudung cantik",
+            "hijab segi empat", "pashmina", "turban", "headband", "bandana",
+            "topi beanie", "kacamata hitam", "kacamata minus", "softlens", "maskara",
+            "eyeliner", "eyebrow pencil", "lipstik matte", "lip cream", "lip balm",
+            "bedak tabur", "foundation", "concealer", "primer", "palette eyeshadow",
+            "blush on", "highlighter", "kuas makeup", "sponge beauty blender", "tisu wajah",
+            "sabun mandi", "shampoo herbal", "conditioner", "hair vitamin", "serum wajah",
+            "sunblock", "pelembab harian", "masker wajah", "toner wajah", "handbody lotion",
+            "parfum original", "minyak wangi", "essence", "kapur barus", "baju gantung",
+            "hanger", "jemuran", "setrika", "mesin cuci", "timba air",
+            "gayung air", "sapu lidi", "pengki", "kain pel", "lap tangan",
+            "obat nyamuk", "raket nyamuk", "kantong sampah", "deterjen bubuk", "deterjen cair",
+            "pewangi pakaian", "sabun cuci piring", "spons cuci", "kain serbet", "aluminum foil",
+            "toples makanan", "wadah penyimpanan", "kulkas 2 pintu", "freezer", "dispenser",
+            "kompor gas", "kompor listrik", "oven listrik", "microwave", "blender portable",
+            "mixer kue", "timbangan digital", "loyang kue", "cetakan donat", "pisau dapur",
+            "talenan", "serokan nasi", "sendok makan", "garpu makan", "piring makan",
+            "botol minum", "tumbler", "tupperware", "vitamin", "suplemen"
         ];
 
-        // Array untuk menampung ribuan kalimat agar tidak terlalu berat saat generate
-        const linesDatabase = [];
+        // --- 4. TEMPLATE KALIMAT (Sentence Templates) ---
+        const templates = [
+            `${targetName} itu {adj}.`,
+            `Mr. Bear suka banget kalo ${targetName} lagi {act}.`,
+            `${targetName} punya {obj} yang lucu.`,
+            `Jangan lupa ya ${targetName}, kamu itu {adj}.`,
+            `Senyum ${targetName} bikin hari jadi {adj}.`,
+            `Semoga ${targetName} selalu {adj}.`,
+            `Kalo ${targetName} {act}, seru banget deh.`,
+            `${targetName} adalah {adj} nomor satu.`,
+            `Apa kabar ${targetName}? Hari ini kamu terlihat {adj}.`,
+            `Mr. Bear peluk ${targetName} yang lagi {act}.`,
+            `${targetName} jangan sedih ya, kamu itu {adj}.`,
+            `Setiap ${targetName} tersenyum, dunia jadi {adj}.`,
+            `${targetName} itu kayak {obj}, berharga banget.`,
+            `Jangan lupa bahagia ya ${targetName}.`,
+            `${targetName} lebih {adj} dari bintang di langit.`,
+            `Mr. Bear bangga sama ${targetName}.`,
+            `Kegemaran ${targetName} yaitu {act}.`,
+            `Melya itu {adj} dan {act}.`,
+            `Apa sih yang nggak ${targetName} punya? Semua! Karena dia {adj}.`,
+            `Doa Mr. Bear untuk ${targetName}: Semoga selalu {adj}.`,
+            `Jangan lupa ${targetName}, minum air putih ya biar tetap {adj}.`,
+            `Wajah ${targetName} berseri kayak {obj}.`,
+            `Senyum ${targetName} manis kayak {obj}.`,
+            `${targetName} itu inspirasi.`,
+            `Jadilah ${targetName} yang selalu {adj}.`,
+            `Melya, kamu itu {adj}. Beneran deh!`,
+            `Sumpah ${targetName} itu {adj} banget.`,
+            `Kalo ${targetName} {act}, Mr. Bear senang.`,
+            `Tetap semangat ya ${targetName}.`,
+            `${targetName} adalah anugerah terindah.`,
+            `Cintailah dirimu sendiri ya ${targetName}, karena kamu {adj}.`,
+            `Mr. Bear menemani ${targetName} yang sedang {act}.`,
+            `Kelebihan ${targetName}: {adj}, {adj}, dan {adj}.`,
+            `Gak ada yang bisa ngalahin ${targetName}.`,
+            `Melya, jangan lupa tersenyum! 🙂`,
+            `${targetName} itu kebetulan terindah.`
+        ];
 
-        // Generator untuk membuat database kalimat di memori
-        function generateDatabase() {
-            // Kita buat 200 variasi kalimat dasar
-            const templates = [
-                `${nama} itu {sifat}.`,
-                `Kalau ${nama} lagi {kegiatan}, seru banget.`,
-                `${nama} punya {benda}.`,
-                `Jangan lupa ${nama}, kamu itu {sifat}.`,
-                `Mr. Bear suka lihat ${nama} {kegiatan}.`,
-                `Semoga ${nama} selalu {sifat}.`,
-                `Hari ini ${nama} {sifat} banget ya?`,
-                `${nama} lebih ${sifat} dari siapapun.`,
-                `{benda} itu cocok banget sama ${nama}.`,
-                `Senyum ${nama} bikin dunia jadi {sifat}.`,
-                `Kadang ${nama} suka {kegiatan}, lucu deh.`,
-                `${nama} adalah {sifat} nomor 1 di hati Mr. Bear.`,
-                `Apa kabar ${nama}? Semoga ${sifat} terus ya.`,
-                `Kalo ${nama} ketawa, Mr. Bear ikut happy.`,
-                `Jangan sedih ya ${nama}, kamu itu {sifat}.`
-            ];
+        // =========================================
+        // LOGIC: GENERATE 1500 LINES
+        // =========================================
 
-            // Kita generate 2000 baris unik ke dalam array
-            for (let i = 0; i < 2000; i++) {
-                let template = templates[Math.floor(Math.random() * templates.length)];
+        const logContainer = document.getElementById('logListContainer');
+        const btnSecret = document.getElementById('btnSecret');
+        let isLoaded = false;
+
+        function generateContent() {
+            if (isLoaded) return; // Biar nggak double load
+            isLoaded = true;
+
+            const fragment = document.createDocumentFragment();
+            const totalLines = 1500;
+
+            for (let i = 0; i < totalLines; i++) {
+                const div = document.createElement('div');
+                div.className = 'log-item';
+                
+                // Pilih template random
+                let text = templates[Math.floor(Math.random() * templates.length)];
                 
                 // Replace placeholder
-                template = template.replace("{sifat}", sifatMelya[Math.floor(Math.random() * sifatMelya.length)]);
-                template = template.replace("{kegiatan}", kegiatanMelya[Math.floor(Math.random() * kegiatanMelya.length)]);
-                template = template.replace("{benda}", bendaLucu[Math.floor(Math.random() * bendaLucu.length)]);
+                text = text.replace("{adj}", adjectives[Math.floor(Math.random() * adjectives.length)]);
+                text = text.replace("{act}", activities[Math.floor(Math.random() * activities.length)]);
+                text = text.replace("{obj}", objects[Math.floor(Math.random() * objects.length)]);
                 
-                // Tambahkan nomor urut biar keliatan rapi
-                linesDatabase.push(`${i + 1}. ${template}`);
+                // Tambah nomor
+                const numSpan = document.createElement('span');
+                numSpan.style.marginRight = "10px";
+                numSpan.style.color = "#ccc";
+                numSpan.style.fontSize = "0.9em";
+                numSpan.innerText = `${i + 1}.`;
+
+                div.appendChild(numSpan);
+                
+                // Masukkan text dan highlight nama
+                const contentSpan = document.createElement('span');
+                contentSpan.innerHTML = text.replace(targetName, `<span class="name-highlight">${targetName}</span>`);
+                
+                div.appendChild(contentSpan);
+                fragment.appendChild(div);
             }
+
+            // Render sekaligus biar cepat (1500 items cukup ringan untuk modern browser)
+            logContainer.appendChild(fragment);
+
+            // Reveal tombol setelah render selesai
+            setTimeout(() => {
+                btnSecret.classList.add('show');
+                logContainer.scrollTop = logContainer.scrollHeight; // Auto scroll ke bawah dikit
+            }, 500);
         }
 
-        // Jalankan generator database
-        generateDatabase();
-
-        // --- LOGIKA HALAMAN & NAVIGASI ---
+        // =========================================
+        // LOGIC: NAVIGASI & INTERAKSI
+        // =========================================
 
         function goToPage(pageNum) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${pageNum}`).classList.add('active');
+            document.getElementById(`p${pageNum}`).classList.add('active');
             
             // Update dots
             document.querySelectorAll('.dot').forEach((d, idx) => {
                 d.classList.toggle('active', idx + 1 === pageNum);
             });
 
-            // Update kata Mr. Bear
-            updateMascotSpeech(pageNum);
-
-            // Khusus halaman 2: Mulai render list
+            // Logic khusus per halaman
+            const bubble = document.getElementById('bearMsg');
+            
             if (pageNum === 2) {
-                renderTheList();
+                bubble.innerText = "Scroll ke bawah terus ya Melya! Banyak banget!";
+                generateContent();
+            } else if (pageNum === 3) {
+                bubble.innerText = "Ini bagian terakhir... baca pelan-pelan ya.";
+                typeWriterEffect();
+            } else {
+                bubble.innerText = "Hai Melya! Klik aku ya!";
             }
         }
 
-        function updateMascotSpeech(page) {
-            const speech = document.getElementById('mascotSpeech');
-            let text = "";
-            
-            if (page === 1) text = "Yuk Melya, masuk dulu!";
-            else if (page === 2) text = "Scroll terus ya, Melya! Banyak hal lucu.";
-            else if (page === 3) text = "Ini bagian favoritku, Melya...";
-            
-            speech.innerText = text;
-            speech.classList.add('show');
+        // =========================================
+        // LOGIC: SURAT TERAKHIR (TYPEWRITER)
+        // =========================================
+
+        const finalMessage = `
+Dear ${targetName}...
+
+Akhirnya, kita sampai di sini. Di garis finis 1500 catatan ini.
+Mr. Bear benar-benar salut sama kamu, Melya. Kamu sabar banget scroll sampai sejauh ini. Itu bukti kecil bahwa kamu itu orang yang istimewa, orang yang nggak asal jadi, orang yang ngerti arti 'komitmen' kecil-kecilan.
+
+Sebenarnya, isi 1500 baris di atas itu nggak ada artinya dibanding satu hal ini: 
+Bahwa kamu, Melya, adalah sosok yang membuat dunia jadi tempat yang jauh lebih indah buat ditinggali.
+
+Caramu ${targetName} melihat sesuatu, caramu bersikap, bahkan caramu (mungkin) marah atau bingung, itu semua bikin kamu unik. Jangan pernah merasa kamu harus jadi orang lain supaya disukai. Karena versi asli kamu sekarang, versi yang lagi baca surat gini, udah lebih dari cukup.
+
+Selama mungkin kamu capek, atau lagi down, atau merasa sendiri, inget selalu satu hal: Ada Bear kecil di sini (dan mungkin orang lain di kehidupan nyatamu) yang bangga banget punya kenalan sama Melya se-hebat dan se-lucu kamu.
+
+Jaga kesehatanmu, ${targetName}. Jaga senyummu. Jangan lupa bahagia.
+Sampai jumpa lagi di kebahagiaan yang lebih besar.
+
+With Love,
+Mr. Bear 🐻
+`;
+
+        function typeWriterEffect() {
+            const element = document.getElementById('finalLetter');
+            element.innerHTML = "";
+            let i = 0;
+            const speed = 30; // Kecepatan ngetik
+
+            function type() {
+                if (i < finalMessage.length) {
+                    element.innerHTML += finalMessage.charAt(i) === '\n' ? '<br>' : finalMessage.charAt(i);
+                    element.scrollTop = element.scrollHeight; // Auto scroll surat
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
         }
+
+        // =========================================
+        // INTERAKSI MASCOT
+        // =========================================
 
         function pokeBear() {
             const phrases = [
-                "Melya lucu ya?",
-                "Melya jangan marah ya...",
-                "Aku sayang Melya!",
-                "Melya the best!",
-                "Mr. Bear peluk Melya!",
-                "Melya semangat!"
+                "Melya paling top!",
+                "Melya cantik ya?",
+                "Mr. Bear lho!",
+                "Jangan bosan ya Melya...",
+                "Love you Melya!",
+                "Melya juara 1!",
+                "Hei Melya! 👋",
+                "Semangat Melya!",
+                "Mr. Bear peluk kamu",
+                "Melya the best!"
             ];
-            const speech = document.getElementById('mascotSpeech');
-            speech.innerText = phrases[Math.floor(Math.random() * phrases.length)];
             
-            // Animasi kecil
-            const bear = document.querySelector('.mascot-emoji');
-            bear.style.transform = "scale(1.2) rotate(-10deg)";
-            setTimeout(() => bear.style.transform = "", 200);
+            const bubble = document.getElementById('bearMsg');
+            const bear = document.querySelector('.bear-avatar');
+            
+            // Ubah teks random
+            bubble.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+            bubble.classList.add('show');
+            
+            // Animasi kaget
+            bear.style.transform = "scale(1.2) rotate(10deg)";
+            setTimeout(() => {
+                bear.style.transform = "";
+                setTimeout(() => {
+                    bubble.classList.remove('show');
+                }, 2000);
+            }, 200);
+
+            // Buat hati
+            createHeart();
         }
 
-        // --- RENDER 2000 BARIS (DIPOTONG-POTONG AGAR TIDAK LAG) ---
-        
-        function renderTheList() {
-            const container = document.getElementById('logContainer');
-            const finalBtn = document.getElementById('finalBtn');
-            
-            // Jika sudah ada isinya, jangan render ulang
-            if (container.children.length > 0) return;
-
-            let index = 0;
-            const chunkSize = 100; // Render 100 baris setiap 50ms
-
-            function addChunk() {
-                const fragment = document.createDocumentFragment();
-                
-                for (let i = 0; i < chunkSize; i++) {
-                    if (index >= linesDatabase.length) break;
-                    
-                    const p = document.createElement('div');
-                    p.className = 'log-item';
-                    
-                    // Highlight nama Melya
-                    let text = linesDatabase[index];
-                    text = text.replace(nama, `<span class="highlight-melya">${nama}</span>`);
-                    
-                    p.innerHTML = text;
-                    fragment.appendChild(p);
-                    index++;
-                }
-                
-                container.appendChild(fragment);
-                
-                // Auto scroll pelan-pelan (optional, dimatikan biar user berasa control)
-                // container.scrollTop = container.scrollHeight; 
-
-                if (index < linesDatabase.length) {
-                    requestAnimationFrame(addChunk);
-                } else {
-                    // Jika sudah selesai semua, reveal tombol akhir
-                    setTimeout(() => {
-                        finalBtn.classList.add('visible');
-                    }, 500);
-                }
-            }
-
-            addChunk();
-        }
-
-        // --- ISI SURAT TERAKHIR (BRUTAL SALTING) ---
-        
-        const finalLetter = `
-Hai, ${nama}...
-
-Akhirnya sampai juga di bagian paling bawah ini. Mr. Bear bangga banget sama kamu karena sabar scroll 2000 baris tadi. Itu artinya kamu itu orang yang sabar dan telaten, dan itu salah satu alasan kenapa kamu spesial.
-
-Sebenarnya, nggak gampang buat nulis hal-hal ini. Tapi, Mr. Bear pengen ${nama} tahu sesuatu yang bener-bener jujur.
-
-Di antara ribuan baris tulisan random di atas, cuma ada satu makna yang sebenarnya: Bahwa kamu, Melya, itu kehadiran yang nggak bisa digantikan oleh siapapun.
-
-Setiap kali ${nama} senyum, rasanya dunia jadi sedikit lebih terang. Setiap kali ${nama} ketawa, suaranya itu jadi lagu favorit Mr. Bear. Cara ${nama} memandang dunia, cara ${nama} bersikap, bahkan kebiasaan kecil ${nama} yang mungkin ${nama} sendiri nggak sadar... itu semua bikin hidup orang di sekitar jadi lebih berwarna.
-
-Melya itu lucu, Melya itu kuat, Melya itu inspirasi. Jangan pernah merasa kamu kurang, ya? Karena di mata Mr. Bear (dan mungkin banyak orang lain yang diam-diam ngagumi kamu), kamu sudah lebih dari cukup.
-
-Terima kasih udah lahir, terima kasih udah jadi Melya. Semoga apa yang ${nama} impikan, semoga apa yang ${nama} doakan, semuanya terkabul. Dan kalau lagi susah, inget selalu ada yang mendoakan ${nama} dari jauh.
-
-Selamat beraktivitas ya, ${nama} yang tersayang!
-`;
-
-        // Masukkan surat ke halaman 3
-        document.getElementById('letterText').innerText = finalLetter;
-
-        // --- EFEK TAMBAHAN: KLIK HEARTS ---
-        
-        document.body.addEventListener('click', (e) => {
+        function createHeart() {
             const heart = document.createElement('div');
-            heart.innerText = '💖';
-            heart.className = 'click-heart';
-            heart.style.left = e.clientX + 'px';
-            heart.style.top = e.clientY + 'px';
+            heart.innerText = ['💖', '💕', '💗', '🐻'][Math.floor(Math.random() * 4)];
+            heart.className = 'heart-pop';
+            
+            // Posisi random di sekitar bear
+            const rect = document.querySelector('.bear-avatar').getBoundingClientRect();
+            const randomX = (Math.random() - 0.5) * 50;
+            
+            heart.style.left = (rect.left + rect.width/2 + randomX) + 'px';
+            heart.style.top = rect.top + 'px';
             
             document.body.appendChild(heart);
             
-            setTimeout(() => {
-                heart.remove();
-            }, 800);
+            setTimeout(() => heart.remove(), 1000);
+        }
+
+        // Klik sembarang ada hati kecil
+        document.addEventListener('click', (e) => {
+            if(e.target.closest('.mascot-container')) return; // Jangan double jika klik bear
+            
+            const h = document.createElement('div');
+            h.innerText = "✨";
+            h.className = 'heart-pop';
+            h.style.left = e.clientX + 'px';
+            h.style.top = e.clientY + 'px';
+            h.style.fontSize = '1rem';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 1000);
         });
 
     </script>
